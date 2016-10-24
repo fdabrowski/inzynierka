@@ -67,29 +67,19 @@ user_datastore = SQLAlchemyUserDatastore(dbUser, User, Role)
 security = Security(app, user_datastore)
 
 # Create a user to test with
+'''
 @app.before_first_request
 def create_user():
     db.create_all()
     user_datastore.create_user(email='alcart', password='nowehaslo123')
     db.session.commit()
+'''
 #################################################################################
 
 @app.route("/")
 @login_required
 def index():
-    all = Alarms.query.all()
-    kontaktron1 = Alarms.query.filter_by(type="kontaktron1")
-    kontaktron2 = Alarms.query.filter_by(type="kontaktron2")
-    move = Alarms.query.filter_by(type="move")
-    smoke = Alarms.query.filter_by(type="smoke")
-    water = Alarms.query.filter_by(type="water")
-    highTemperature = Alarms.query.filter_by(type="highTemperature")
-
-    #data =jsonify(kontaktron1=[i.serialize for i in kontaktron1], kontaktron2=[i.serialize for i in kontaktron2],
-    #               move=[i.serialize for i in move], smoke=[i.serialize for i in smoke],
-    #               water=[i.serialize for i in water], highTemperature = [i.serialize for i in highTemperature])
-
-    return render_template('index.html', all=all, kontaktron1=kontaktron1, kontaktron2=kontaktron2, move=move, smoke=smoke, water=water, highTemperature=highTemperature)
+    return render_template('index.html')
 
 @app.route("/background", methods=['GET','POST'])
 def background():
