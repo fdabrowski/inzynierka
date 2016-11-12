@@ -15,7 +15,7 @@ $(function() {
     }, 10000);
 
     // Donut Chart
-    chart = Morris.Donut({
+    donutChart = Morris.Donut({
         element: 'morris-donut-chart',
         data: [{
                         label: "kontaktron1",
@@ -51,7 +51,7 @@ $(function() {
                 highTemperatureAJAX = data.highTemperatureList
 
                 console.log('dlugosc', kontaktron1AJAX.length);
-                chart.setData([{
+                donutChart.setData([{
                         label: "kontaktron1",
                         value: kontaktron1AJAX.length
                     }, {
@@ -67,8 +67,11 @@ $(function() {
                         label: "ruch",
                         value: moveAJAX.length
                     }])
+
+
             }
         });
     }
 
 });
+
