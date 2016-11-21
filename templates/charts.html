@@ -153,13 +153,13 @@
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
                     <li>
-                        <a href="/"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                        <a href="/"><i class="fa fa-fw fa-dashboard"></i> Panel zarządzający</a>
                     </li>
                     <li class="active">
-                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+                        <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Wykresy</a>
                     </li>
                     <li>
-                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
+                        <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tabele</a>
                     </li>
                 </ul>
             </div>
@@ -174,36 +174,45 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Charts
+                            Panel zarządzający
+                            <small>Wykresy</small>
                         </h1>
                         <ol class="breadcrumb">
                             <li>
-                                <i class="fa fa-dashboard"></i>  <a href="index.html">Dashboard</a>
+                                <i class="fa fa-dashboard"></i>  <a href="index.html">Panel zarządzający</a>
                             </li>
                             <li class="active">
-                                <i class="fa fa-bar-chart-o"></i> Charts
+                                <i class="fa fa-bar-chart-o"></i> Wykresy
                             </li>
                         </ol>
                     </div>
                 </div>
                 <!-- /.row -->
 
-
-                <!-- Morris Charts -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h2 class="page-header">Morris Charts</h2>
-                        <p class="lead">Morris.js is a very simple API for drawing line, bar, area and donut charts. For full usage instructions and documentation for Morris.js charts, visit <a href="http://morrisjs.github.io/morris.js/">http://morrisjs.github.io/morris.js/</a>.</p>
-                    </div>
-                </div>
                 <!-- /.row -->
 
                 <div class="row">
                         <div class="panel panel-red">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Line Graph Example with Tooltips</h3>
+                                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Dane z wybranych czujników</h3>
                                 <div id='jqxcombobox'></div></div>
-
+                                </br>
+                                <li>Wybierz czujnik:
+                                    <select>
+                                        <option value="Kontatkron1">Kontatkron 1</option>
+                                        <option value="Kontaktron2">Kontaktron 2</option>
+                                        <option value="Pożar">Pożar</option>
+                                        <option value="Ruch">Ruch</option>
+                                        <option value="Zalanie">Zalanie</option>
+                                    </select>
+                                </li>
+                                </br>
+                                <li>Wybierz czas:
+                                    <select>
+                                        <option value="lastMonth">Ostatni Miesiąc</option>
+                                        <option value="LastDay">Ostatni dzień</option>
+                                    </select>
+                                </li>
                             <div class="panel-body">
                                 <div id="morris-line-chart"></div>
                             </div>

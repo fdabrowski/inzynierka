@@ -58,7 +58,6 @@ $(function() {
     function matchData(){
         var graph_data = [{d: daysOfMonth[0], visits: days[0]}];
         for(var i=0; i<daysOfMonth.length; i++){
-            //addPoint(daysOfMonth[i], days[i]);
             graph_data.push({
                 d: daysOfMonth[i],
                 visits: days[i]
@@ -101,19 +100,6 @@ $(function() {
                 countData(kontaktron1MonthAJAX);
                 console.log("Days", days);
                 matchData();
-                //lineChart.setData(chartData)
-                //prepareData()
-
-                /*
-                for(var i=0; i < kontaktron1MonthAJAX; i++){
-                    lineChart.setData(
-                    [{
-                        d: kontaktron1MonthAJAX[i].date,
-                        visits: kontaktron1MonthAJAX[i].length
-                        }
-                    ])
-                }
-                */
             }
         });
     }

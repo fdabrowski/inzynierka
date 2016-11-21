@@ -12,7 +12,7 @@ $(function() {
     updateData()
     setInterval(function(){
         updateData()
-    }, 10000);
+    }, 3000);
 
     // Donut Chart
     donutChart = Morris.Donut({

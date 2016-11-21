@@ -4,8 +4,7 @@ from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMix
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-#from json import dumps
-import json
+import login
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://filip:nowehaslo123@localhost/alarms'
