@@ -5,14 +5,15 @@
     var $waterAJAX = $['waterAJAX'];
     var $highTemperatureAJAX = $['highTemperatureAJAX'];
     var table;
+    var checkType = " ";
 
     updateData();
     $(document).ready(function(){
         sensorType = sensorTableValue.options[sensorTableValue.selectedIndex].text;
         table = $('#sensorTable').DataTable( {
-        data: dataSet,
         "bProcessing": true,
         "bStateSave": true,
+        "bServerSide": false,
         columns: [
             { title: "Id" },
             { title: "Id z bazy danych" },
@@ -24,14 +25,6 @@
             updateData();
         }, 3000);
     });
-
-    var dataSet = [
-        ["1","2","3","0"],["chuj","2","3","s"],["1","2","3","s"],["1","2","3","s"]
-    ];
-
-     var dataSets = [
-        ["1","2","3","0"],["s","2","3","s"],["1","2","3","s"],["1","2","3","s"]
-    ];
 
     function getTable(list){
         result = [];
@@ -61,21 +54,6 @@
         return result
     }
 
-    /*
-    function matchData(time){
-        var graph_data = [{d: time[0], visits: days[0]}];
-        for(var i=1; i<time.length; i++){
-            graph_data.push({
-                d: time[i],
-                visits: days[i]
-            });
-
-        }
-        lineChart.setData(graph_data);
-        lineChart.redraw();
-    }
-    */
-
     function updateData(){
         $.ajax({
             type: 'GET',
@@ -87,17 +65,6 @@
                 smokeAJAX = data.smokeList;
                 waterAJAX = data.waterList;
                 highTemperatureAJAX = data.highTemperatureList
-
-
-                /*
-                console.log('kontaktron2',kontaktron2AJAX);
-
-                console.log('move1',moveAJAX);
-                console.log('smoke',smokeAJAX);
-                console.log('water',waterAJAX);
-                console.log('highTemperature',highTemperatureAJAX);
-                */
-
 
                 $("#kontaktron1Length").html("Ilość alarmów: "+kontaktron1AJAX.length);
                 $("#kontaktron1Date").html(
@@ -125,11 +92,18 @@
                 );
 
                 sensorType = sensorTableValue.options[sensorTableValue.selectedIndex].text;
-                console.log('kontaktron1',getSensor(sensorType));
 
                 table.clear();
                 table.rows.add(getTable(getSensor(sensorType)));
-                table.draw();
+
+                $("#tableTitle").html("<h2>" +sensorType +"</h2>");
+
+                if(checkType == sensorType){
+                    table.draw(false);
+                }else{
+                    table.draw();
+                }
+                checkType = sensorType;
 
             }
         });

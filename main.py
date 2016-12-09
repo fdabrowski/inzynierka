@@ -1,19 +1,25 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import request, redirect, render_template, Flask, url_for, jsonify
-from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
+#from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required, logout_user, current_user
+from flask_security import *
+from flask_login import *
+
 import datetime
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
-import login
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://filip:nowehaslo123@localhost/alarms'
 app.config['SECRET_KEY'] = 'super-secret'
-app.debug=True
+app.debug= True
 app.permanent_session_lifetime = timedelta(minutes=20)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 db = SQLAlchemy(app)
 dbUser = SQLAlchemy(app)
+
 
 class Alarms(db.Model):
 
@@ -46,6 +52,9 @@ def dump_datetime(value):
         return None
     return [value.strftime("%Y-%m-%d"), value.strftime("%H:%M:%S")]
 
+def getCurrentUser():
+    return current_user.email
+
 def getDays():
     days = []
     now = datetime.datetime.now()
@@ -63,16 +72,6 @@ def getWeek():
         day = day + relativedelta(days=+1)
         days.append(day.date().isoformat())
     return days
-
-def dayRange():
-    now = datetime.datetime(2000, 1, 1, 0, 0, 0)
-    last = datetime.datetime(2000, 1, 2, 0, 0, 0)
-    delta = timedelta(hours=1)
-    times = []
-    while now < last:
-        times.append(now.strftime('%H:%M:%S'))
-        now += delta
-    return times
 
 #################################################################################
 # Define models
@@ -108,26 +107,39 @@ def create_user():
 '''
 #################################################################################
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
 @app.route("/")
 @login_required
 def index():
-    return render_template('index.html')
+    return render_template('index.html', currentUserName=getCurrentUser())
 
 @app.route("/charts.html")
 @login_required
 def charts():
-    return render_template('charts.html')
+    return render_template('charts.html', currentUserName=getCurrentUser())
 
 @app.route("/tables.html")
 @login_required
 def tables():
-    return render_template('tables.html')
+    return render_template('tables.html', currentUserName=getCurrentUser())
+
+@app.route("/logout")
+def logout():
+    logout_user
+    return  render_template('index.html')
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
 
 @app.route("/background", methods=['GET','POST'])
 def background():
 
     now = datetime.datetime.now()
-
     kontaktron1 = Alarms.query.filter_by(type="kontaktron1")
     kontaktron2 = Alarms.query.filter_by(type="kontaktron2")
     move = Alarms.query.filter_by(type="move")
