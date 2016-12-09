@@ -15,12 +15,21 @@ $(function() {
     var $waterDayAJAX = $['$waterDayAJAX'];
     var $highTemperatureDayAJAX = $['$highTemperatureDayAJAX'];
     var $daysOfMonth = $['daysOfMonth'];
+    var $daysOfWeek = $['hoursOfTheDay'];
+
+
     var days = [];
+
+    var sensorList = document.getElementById("sensor");
+    var chartSensor ;
+
+    var timeList = document.getElementById("time");
+    var chartTime ;
 
     updateData()
     setInterval(function(){
         updateData()
-    }, 10000);
+    }, 2000);
 
     // Line Chart
     lineChart = Morris.Line({
@@ -38,16 +47,19 @@ $(function() {
         labels: ['Alarms'],
         // Disables line smoothing
         smooth: false,
-        resize: true
+        resize: true,
+        parseTime: false
     });
 
-    function countData(list){
-        for(var k=0;k<list.length; k++){
+    function countData(list,time){
+        days = [];
+        for(var k=0;k<time.length; k++){
             days[k]= 0;
         }
-        for(var i=0; i < daysOfMonth.length; i++){
-            for(var j=0; j<list.length; j++){
-                if(list[j].date[0] == daysOfMonth[i] ){
+
+        for(var i=0; i < time.length; i++){
+            for(var j=0; j< list.length; j++){
+                if(list[j].date[0] == time[i] ){
                     days[i] = days[i] + 1;
                 }
             }
@@ -55,11 +67,12 @@ $(function() {
         return days;
     }
 
-    function matchData(){
-        var graph_data = [{d: daysOfMonth[0], visits: days[0]}];
-        for(var i=0; i<daysOfMonth.length; i++){
+
+    function matchData(time){
+        var graph_data = [{d: time[0], visits: days[0]}];
+        for(var i=1; i<time.length; i++){
             graph_data.push({
-                d: daysOfMonth[i],
+                d: time[i],
                 visits: days[i]
             });
 
@@ -67,7 +80,6 @@ $(function() {
         lineChart.setData(graph_data);
         lineChart.redraw();
     }
-
 
     function updateData(){
         $.ajax({
@@ -81,25 +93,70 @@ $(function() {
                 waterMonthAJAX = data.waterMonthList;
                 highTemperatureMonthAJAX = data.highTemperatureMonthList;
 
-                kontaktron1DayAJAX = data.kontaktron1DayList;
-                kontaktron2DayAJAX = data.kontaktron2DayList;
-                moveDayAJAX = data.moveDayList;
-                smokeDayAJAX = data.smokeDayList;
-                waterDayAJAX = data.waterDayList;
-                highTemperatureDayAJAX = data.highTemperatureDayList;
+                kontaktron1WeekAJAX = data.kontaktron1WeekList;
+                kontaktron2WeekAJAX = data.kontaktron2WeekList;
+                moveWeekAJAX = data.moveWeekList;
+                smokeWeekAJAX = data.smokeWeekList;
+                waterWeekAJAX = data.waterWeekList;
+                highTemperatureWeekAJAX = data.highTemperatureWeekList;
                 daysOfMonth = data.daysFromMonth;
+                daysOfWeek = data.daysFromWeek;
 
-                //console.log("kontaktron1MonthAJAX", kontaktron1MonthAJAX)
-                //console.log("kontaktron2MonthAJAX", kontaktron2MonthAJAX)
-                //console.log("moveMonthAJAX", moveMonthAJAX)
-                //console.log("smokeMonthAJAX", smokeMonthAJAX)
-                //console.log("waterMonthAJAX", waterMonthAJAX)
-                //console.log("highTemperatureMonthAJAX", highTemperatureMonthAJAX)
-                //console.log("Days", daysOfMonth)
+                chartSensor = sensorList.options[sensorList.selectedIndex].text;
+                chartTime = timeList.options[timeList.selectedIndex].text;
+                console.log("chartTime", chartTime)
 
-                countData(kontaktron1MonthAJAX);
-                console.log("Days", days);
-                matchData();
+                if(chartSensor == "Kontaktron 1"){
+                    if(chartTime == "Ostatni Miesiąc"){
+                        countData(kontaktron1MonthAJAX, daysOfMonth);
+                        matchData(daysOfMonth);
+                    }
+                    else if(chartTime == "Ostatni Tydzień"){
+                        countData(kontaktron1WeekAJAX, daysOfWeek);
+                        matchData(daysOfWeek);
+                    }
+
+                }
+                else if(chartSensor == "Kontaktron 2"){
+                    if(chartTime == "Ostatni Miesiąc"){
+                        countData(kontaktron2MonthAJAX, daysOfMonth);
+                        matchData(daysOfMonth);
+                    }
+                    else if(chartTime == "Ostatni Tydzień"){
+                        countData(kontaktron2WeekAJAX, daysOfWeek);
+                        matchData(daysOfWeek);
+                    }
+                }
+                else if(chartSensor == "Pożar"){
+                    if(chartTime == "Ostatni Miesiąc"){
+                        countData(smokeMonthAJAX, daysOfMonth);
+                        matchData(daysOfMonth);
+                    }
+                    else if(chartTime == "Ostatni Tydzień"){
+                        countData(smokeWeekAJAX, daysOfWeek);
+                        matchData(daysOfWeek);
+                    }
+                }
+                else if(chartSensor == "Ruch"){
+                    if(chartTime == "Ostatni Miesiąc"){
+                        countData(moveMonthAJAX, daysOfMonth);
+                        matchData(daysOfMonth);
+                    }
+                    else if(chartTime == "Ostatni Tydzień"){
+                        countData(moveWeekAJAX, daysOfWeek);
+                        matchData(daysOfWeek);
+                    }
+                }
+                else if(chartSensor == "Zalanie"){
+                    if(chartTime == "Ostatni Miesiąc"){
+                        countData(waterMonthAJAX, daysOfMonth);
+                        matchData(daysOfMonth);
+                    }
+                    else if(chartTime == "Ostatni Tydzień"){
+                        countData(waterWeekAJAX, daysOfWeek);
+                        matchData(daysOfWeek);
+                    }
+                }
             }
         });
     }

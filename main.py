@@ -16,14 +16,17 @@ db = SQLAlchemy(app)
 dbUser = SQLAlchemy(app)
 
 class Alarms(db.Model):
+
     __tablename__ = 'alarmsTable2'
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50), unique=False)
     date = db.Column(db.DateTime(50), unique=False)
+    value = db.Column(db.Integer, unique=False)
 
     def __init__(self, type, date):
         self.type = type
         self.date = date
+        self.value = value
 
     def __repr__(self):
         return '<Type: %r >' % (self.type)
@@ -34,6 +37,7 @@ class Alarms(db.Model):
            'id': self.id,
            'type': self.type,
            'date': dump_datetime(self.date),
+           'value': self.value,
        }
 
 def dump_datetime(value):
@@ -50,6 +54,25 @@ def getDays():
         day = day + relativedelta(days=+1)
         days.append(day.date().isoformat())
     return days
+
+def getWeek():
+    days = []
+    now = datetime.datetime.now()
+    day = now + relativedelta(days=-7)
+    while day <= now + relativedelta(days=-1):
+        day = day + relativedelta(days=+1)
+        days.append(day.date().isoformat())
+    return days
+
+def dayRange():
+    now = datetime.datetime(2000, 1, 1, 0, 0, 0)
+    last = datetime.datetime(2000, 1, 2, 0, 0, 0)
+    delta = timedelta(hours=1)
+    times = []
+    while now < last:
+        times.append(now.strftime('%H:%M:%S'))
+        now += delta
+    return times
 
 #################################################################################
 # Define models
@@ -119,12 +142,12 @@ def background():
     waterMonth = Alarms.query.filter(Alarms.type == "water", Alarms.date.between(now + relativedelta(months=-1), now))
     highTemperatureMonth = Alarms.query.filter(Alarms.type == "highTemperature", Alarms.date.between(now + relativedelta(months=-1), now))
 
-    kontaktron1Day = Alarms.query.filter(Alarms.type == "kontaktron1", Alarms.date.between(now + relativedelta(days=-1), now))
-    kontaktron2Day = Alarms.query.filter(Alarms.type == "kontaktron2", Alarms.date.between(now + relativedelta(days=-1), now))
-    moveDay = Alarms.query.filter(Alarms.type == "move", Alarms.date.between(now + relativedelta(days=-1), now))
-    smokeDay = Alarms.query.filter(Alarms.type == "smoke", Alarms.date.between(now + relativedelta(days=-1), now))
-    waterDay = Alarms.query.filter(Alarms.type == "water", Alarms.date.between(now + relativedelta(days=-1), now))
-    highTemperatureDay = Alarms.query.filter(Alarms.type == "highTemperature", Alarms.date.between(now + relativedelta(days=-1), now))
+    kontaktron1Week = Alarms.query.filter(Alarms.type == "kontaktron1", Alarms.date.between(now + relativedelta(days=-7), now))
+    kontaktron2Week = Alarms.query.filter(Alarms.type == "kontaktron2", Alarms.date.between(now + relativedelta(days=-7), now))
+    moveWeek = Alarms.query.filter(Alarms.type == "move", Alarms.date.between(now + relativedelta(days=-7), now))
+    smokeWeek = Alarms.query.filter(Alarms.type == "smoke", Alarms.date.between(now + relativedelta(days=-7), now))
+    waterWeek = Alarms.query.filter(Alarms.type == "water", Alarms.date.between(now + relativedelta(days=-7), now))
+    highTemperatureWeek = Alarms.query.filter(Alarms.type == "highTemperature", Alarms.date.between(now + relativedelta(days=-7), now))
 
     return jsonify(kontaktron1List=[i.serialize for i in kontaktron1], kontaktron2List=[i.serialize for i in kontaktron2],
                    moveList=[i.serialize for i in move], smokeList=[i.serialize for i in smoke],
@@ -132,9 +155,9 @@ def background():
                    kontaktron1MonthList=[i.serialize for i in kontaktron1Month], kontaktron2MonthList=[i.serialize for i in kontaktron2Month],
                    moveMonthList=[i.serialize for i in moveMonth], smokeMonthList=[i.serialize for i in smokeMonth],
                    waterMonthList=[i.serialize for i in waterMonth], highTemperatureMonthist=[i.serialize for i in highTemperatureMonth],
-                   kontaktron1DayList=[i.serialize for i in kontaktron1Day], kontaktron2DayList=[i.serialize for i in kontaktron2Day],
-                   moveDayList=[i.serialize for i in moveDay], smokeDayList=[i.serialize for i in smokeDay],
-                   waterDayList=[i.serialize for i in waterDay], highTemperatureDayList=[i.serialize for i in highTemperatureDay], daysFromMonth=getDays())
+                   kontaktron1WeekList=[i.serialize for i in kontaktron1Week], kontaktron2WeekList=[i.serialize for i in kontaktron2Week],
+                   moveWeekList=[i.serialize for i in moveWeek], smokeWeekList=[i.serialize for i in smokeWeek],
+                   waterWeekList=[i.serialize for i in waterWeek], highTemperatureWeekList=[i.serialize for i in highTemperatureWeek], daysFromMonth=getDays(), daysFromWeek=getWeek())
 
 @app.route("/post_user", methods=['POST'])
 def post_user():
