@@ -14,9 +14,6 @@ app.config['SECRET_KEY'] = 'super-secret'
 app.debug= True
 app.permanent_session_lifetime = timedelta(minutes=20)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-
 db = SQLAlchemy(app)
 dbUser = SQLAlchemy(app)
 
@@ -107,10 +104,6 @@ def create_user():
 '''
 #################################################################################
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(user_id)
-
 @app.route("/")
 @login_required
 def index():
@@ -140,6 +133,7 @@ def login():
 def background():
 
     now = datetime.datetime.now()
+
     kontaktron1 = Alarms.query.filter_by(type="kontaktron1")
     kontaktron2 = Alarms.query.filter_by(type="kontaktron2")
     move = Alarms.query.filter_by(type="move")
