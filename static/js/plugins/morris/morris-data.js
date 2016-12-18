@@ -3,7 +3,6 @@
 $(function() {
 
     var $kontaktron1AJAX = $['kontaktron1AJAX'];
-    var $kontaktron2AJAX = $['kontaktron2AJAX'];
     var $moveAJAX = $['move1AJAX'];
     var $smokeAJAX = $['smokeAJAX'];
     var $waterAJAX = $['waterAJAX'];
@@ -18,10 +17,7 @@ $(function() {
     donutChart = Morris.Donut({
         element: 'morris-donut-chart',
         data: [{
-                        label: "kontaktron1",
-                        value: 5
-                    }, {
-                        label: "kontaktron2",
+                        label: "kontaktron",
                         value: 5
                     }, {
                         label: "zalanie",
@@ -37,14 +33,12 @@ $(function() {
         hideHover: 'auto',
         resize: true
     });
-
     function updateData(){
         $.ajax({
             type: 'GET',
             url: '/background',
             success: function(data){
                 kontaktron1AJAX = data.kontaktron1List;
-                kontaktron2AJAX = data.kontaktron2List;
                 moveAJAX = data.moveList;
                 smokeAJAX = data.smokeList;
                 waterAJAX = data.waterList;
@@ -52,11 +46,8 @@ $(function() {
 
                 console.log('dlugosc', kontaktron1AJAX.length);
                 donutChart.setData([{
-                        label: "kontaktron1",
+                        label: "kontaktron",
                         value: kontaktron1AJAX.length
-                    }, {
-                        label: "kontaktron2",
-                        value: kontaktron2AJAX.length
                     }, {
                         label: "zalanie",
                         value: waterAJAX.length
@@ -67,8 +58,6 @@ $(function() {
                         label: "ruch",
                         value: moveAJAX.length
                     }])
-
-
             }
         });
     }

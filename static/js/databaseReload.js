@@ -1,5 +1,4 @@
     var $kontaktron1AJAX = $['kontaktron1AJAX'];
-    var $kontaktron2AJAX = $['kontaktron2AJAX'];
     var $moveAJAX = $['move1AJAX'];
     var $smokeAJAX = $['smokeAJAX'];
     var $waterAJAX = $['waterAJAX'];
@@ -36,11 +35,8 @@
 
     function getSensor(type){
         result = [];
-        if(type == "Kontaktron 1"){
+        if(type == "Kontaktron"){
             result = kontaktron1AJAX;
-        }
-        else if(type == "Kontaktron 2"){
-            result = kontaktron2AJAX;
         }
         else if(type == "Pożar"){
             result = smokeAJAX;
@@ -60,20 +56,14 @@
             url: '/background',
             success: function(data){
                 kontaktron1AJAX = data.kontaktron1List;
-                kontaktron2AJAX = data.kontaktron2List;
                 moveAJAX = data.moveList;
                 smokeAJAX = data.smokeList;
                 waterAJAX = data.waterList;
-                highTemperatureAJAX = data.highTemperatureList
+                temperatureNow = data.temperatureNow;
 
                 $("#kontaktron1Length").html("Ilość alarmów: "+kontaktron1AJAX.length);
                 $("#kontaktron1Date").html(
                      (kontaktron1AJAX.length == 0) ? "Ostatni alarm: -" : "Ostatni alarm: " +kontaktron1AJAX[kontaktron1AJAX.length-1].date
-                );
-
-                $("#kontaktron2Length").html("Ilość alarmów: "+kontaktron2AJAX.length);
-                $("#kontaktron2Date").html(
-                     (kontaktron2AJAX.length == 0) ? "Ostatni alarm: -" : "Ostatni alarm: " +kontaktron2AJAX[kontaktron2AJAX.length-1].date
                 );
 
                 $("#waterLength").html("Ilość alarmów: "+waterAJAX.length);
@@ -90,6 +80,9 @@
                 $("#smokeDate").html(
                      (smokeAJAX.length == 0) ? "Ostatni alarm: -" : "Ostatni alarm: " +smokeAJAX[smokeAJAX.length-1].date
                 );
+
+                $("#temperature").html("Aktualna temperatura: " +temperatureNow.value +"°C");
+
 
                 sensorType = sensorTableValue.options[sensorTableValue.selectedIndex].text;
 
