@@ -6,7 +6,6 @@ $(function() {
     var $moveAJAX = $['move1AJAX'];
     var $smokeAJAX = $['smokeAJAX'];
     var $waterAJAX = $['waterAJAX'];
-    var $highTemperatureAJAX = $['highTemperatureAJAX'];
 
     updateData()
     setInterval(function(){
@@ -42,9 +41,7 @@ $(function() {
                 moveAJAX = data.moveList;
                 smokeAJAX = data.smokeList;
                 waterAJAX = data.waterList;
-                highTemperatureAJAX = data.highTemperatureList
 
-                console.log('dlugosc', kontaktron1AJAX.length);
                 donutChart.setData([{
                         label: "kontaktron",
                         value: kontaktron1AJAX.length

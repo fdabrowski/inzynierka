@@ -22,7 +22,7 @@ class Alarms(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(50), unique=False)
     date = db.Column(db.DateTime(50), unique=False)
-    value = db.Column(db.Integer, unique=False)
+    value = db.Column(db.Float, unique=False)
 
     def __init__(self, type, date, value):
         self.type = type
@@ -164,9 +164,6 @@ def background():
     water = Alarms.query.filter_by(type="water")
     temperature = Alarms.query.filter_by(type="temperature")
 
-    temperatureList = temperature.all()
-    temperatureNow = temperatureList[len(temperatureList) - 1]
-
     kontaktron1Month = Alarms.query.filter(Alarms.type == "kontaktron1", Alarms.date.between(now + relativedelta(months=-1), now))
     moveMonth = Alarms.query.filter(Alarms.type == "move", Alarms.date.between(now + relativedelta(months=-1), now))
     smokeMonth = Alarms.query.filter(Alarms.type == "smoke", Alarms.date.between(now + relativedelta(months=-1), now))
@@ -198,7 +195,7 @@ def background():
                    temperatureWeekList=[i.serialize for i in temperatureWeek],
                    daysFromMonth=getMonth(),
                    daysFromWeek=getWeek(),
-                   temperatureNow=temperatureNow.serialize,
+                   temperatureNow=temperatureWeekList[len(temperatureWeekList) - 1].serialize,
                    avgTemperatureWeekList=avgTemperature(getWeek(), temperatureWeekList),
                    avgTemperatureMonthList=avgTemperature(getMonth(), temperatureMonthList))
 
